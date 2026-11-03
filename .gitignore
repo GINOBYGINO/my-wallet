@@ -36,3 +36,7 @@ __pycache__/
 
 # 內部規劃文件（不開源）
 V1.*_PLAN.md
+
+# 個人指令／計畫匯出（課表、行程、生活資料；勿當公開範例）
+*.mywallet-cmd.json
+/scripts/gen_plan_*.py
