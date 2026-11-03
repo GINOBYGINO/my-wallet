@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>我的錢包 · PC 暫代</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button type="button" id="btnBack" class="icon-btn" hidden aria-label="返回">←</button>
+      <div class="topbar-text">
+        <h1 id="pageTitle">打卡</h1>
+        <p id="healthLine" class="muted">載入中…</p>
+      </div>
+      <div class="top-actions">
+        <button type="button" id="btnRefresh">重新整理</button>
+        <button type="button" id="btnExport" class="primary">匯出</button>
+      </div>
+    </header>
+
+    <p id="toast" class="toast" hidden></p>
+
+    <main class="content">
+      <!-- 打卡（底欄 0） -->
+      <section class="page" data-page="checkin">
+        <button type="button" class="nav-row" data-goto="pass">
+          <span>本月通行證</span>
+          <span id="passLine" class="muted nav-trail">—</span>
+        </button>
+        <div class="block">
+          <h2>娛樂券</h2>
+          <div id="ticketList" class="chips"></div>
+          <form id="formTicket" class="form-row">
+            <select id="tkKind">
+              <option value="SLOT">🎰 拉霸</option>
+              <option value="BJ">🃏 二十一點</option>
+              <option value="SCRATCH">🎫 比大小</option>
+              <option value="DRAW">🎴 殺撲克</option>
+              <option value="LOTTO">🎟 樂透</option>
+              <option value="MATCH">🍬 消消樂</option>
+              <option value="MATH">🧮 速算</option>
+            </select>
+            <input id="tkN" type="number" min="1" value="1" />
+            <button type="submit">加券</button>
+          </form>
+          <p class="hint">遊戲本體請用備註記；券數可在此調整。</p>
+        </div>
+        <div class="block">
+          <h2>備註</h2>
+          <form id="formNote" class="form-row">
+            <input id="noteText" type="text" placeholder="打卡／遊戲等無法自動入帳的事" />
+            <button type="submit">記下</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- 任務（底欄 1） -->
+      <section class="page" data-page="tasks" hidden>
+        <button type="button" class="nav-row" data-goto="focus">
+          <span>專注結算</span>
+          <span class="muted nav-trail">手動記時 →</span>
+        </button>
+        <div class="block">
+          <h2>進行中</h2>
+          <div id="taskList" class="stack"></div>
+        </div>
+        <div class="block">
+          <h2>新增任務</h2>
+          <form id="formTask" class="form-row wrap">
+            <input id="taskTitle" type="text" placeholder="標題" required />
+            <select id="taskCat">
+              <option>生活</option>
+              <option selected>學業</option>
+              <option>專案</option>
+              <option>社交</option>
+              <option>財政</option>
+              <option>其他</option>
+            </select>
+            <input id="taskLevel" type="number" min="1" max="9" value="2" title="券級 1–9" />
+            <button type="submit">新增</button>
+          </form>
+        </div>
+        <div class="block">
+          <h2>課表／行程（唯讀）</h2>
+          <div id="calList" class="stack compact muted"></div>
+        </div>
+      </section>
+
+      <!-- 考試（底欄 2） -->
+      <section class="page" data-page="exam" hidden>
+        <p id="examProgress" class="muted lead"></p>
+        <div class="block">
+          <h2>串列</h2>
+          <div id="examQueue" class="stack"></div>
+        </div>
+        <div class="block">
+          <h2>範圍</h2>
+          <div id="examItems" class="stack"></div>
+        </div>
+        <div class="block">
+          <h2>新增課程／單元</h2>
+          <form id="formExam" class="form-col">
+            <label>課程 <input id="examSubject" type="text" placeholder="微積分" required /></label>
+            <label>備註 <input id="examNote" type="text" placeholder="可空" /></label>
+            <label>單元（逗號分隔） <input id="examUnits" type="text" placeholder="1-1, 1-2" /></label>
+            <button type="submit">儲存</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- 錢包（底欄 3） -->
+      <section class="page" data-page="wallet" hidden>
+        <div class="subnav">
+          <button type="button" class="nav-row" data-goto="market">
+            <span>借貸市場</span>
+            <span class="muted nav-trail">→</span>
+          </button>
+          <button type="button" class="nav-row" data-goto="invest">
+            <span>投資（唯讀）</span>
+            <span class="muted nav-trail">→</span>
+          </button>
+          <button type="button" class="nav-row" data-goto="settings">
+            <span>設定／同步</span>
+            <span class="muted nav-trail">→</span>
+          </button>
+        </div>
+        <div class="block">
+          <h2>餘額</h2>
+          <div id="walletList" class="stack"></div>
+        </div>
+        <div class="block">
+          <h2>轉帳</h2>
+          <form id="formTransfer" class="form-row wrap">
+            <select id="tfFrom" required></select>
+            <span>→</span>
+            <select id="tfTo" required></select>
+            <input id="tfYuan" type="number" step="0.01" min="0.01" placeholder="元" required />
+            <input id="tfNote" type="text" placeholder="備註" />
+            <button type="submit">轉帳</button>
+          </form>
+        </div>
+        <div class="block" id="pendingBlock">
+          <h2>待轉移確認</h2>
+          <p id="pendingNet" class="lead muted"></p>
+          <div id="pendingList" class="stack muted"></div>
+          <div class="form-row" style="margin-top:0.6rem">
+            <input id="pendingYuan" type="number" step="1" min="0" placeholder="金額（元）" />
+            <button type="button" id="btnConfirmPhysical" class="primary">確認轉移</button>
+          </div>
+          <p class="hint">對齊手機錢包頁：輸入金額後按「確認轉移」（可留空＝全額）。</p>
+        </div>
+        <div class="block">
+          <h2>最近交易</h2>
+          <div id="txList" class="stack compact"></div>
+        </div>
+      </section>
+
+      <!-- 娛樂（底欄 4） -->
+      <section class="page" data-page="fun" hidden>
+        <div class="block">
+          <h2>目前持券</h2>
+          <div id="ticketListFun" class="chips"></div>
+          <p class="hint">拉霸／二十一點等遊戲請回手機玩；此處只顯示券數。若有玩過可用打卡頁備註。</p>
+        </div>
+      </section>
+
+      <!-- 子頁：通行證 -->
+      <section class="page" data-page="pass" hidden>
+        <div class="block">
+          <h2>通行證進度</h2>
+          <p id="passDetail" class="lead"></p>
+          <p class="hint">完成任務／考試會自動 +1 格；領獎請回手機。</p>
+        </div>
+      </section>
+
+      <!-- 子頁：專注 -->
+      <section class="page" data-page="focus" hidden>
+        <div class="block">
+          <h2>結算一場專注</h2>
+          <form id="formFocus" class="form-col">
+            <label>分鐘 <input id="focusMin" type="number" min="1" max="120" value="30" required /></label>
+            <label>主題 <input id="focusIntent" type="text" value="PC暫代" /></label>
+            <label>分類
+              <select id="focusCat">
+                <option>生活</option>
+                <option selected>學業</option>
+                <option>專案</option>
+                <option>社交</option>
+                <option>財政</option>
+                <option>其他</option>
+              </select>
+            </label>
+            <label class="check"><input id="focusTickets" type="checkbox" checked /> 發券（長期）</label>
+            <button type="submit" class="primary">結算</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- 子頁：借貸市場 -->
+      <section class="page" data-page="market" hidden>
+        <div class="block">
+          <h2>進行中借據</h2>
+          <div id="loanList" class="stack"></div>
+        </div>
+        <div class="block">
+          <h2>借款</h2>
+          <form id="formBorrow" class="form-row wrap">
+            <select id="loanLender" required></select>
+            <span>→</span>
+            <select id="loanBorrower" required></select>
+            <input id="loanYuan" type="number" step="0.01" min="0.01" placeholder="元" required />
+            <label class="check"><input id="loanDueThisMonth" type="checkbox" /> 本月還</label>
+            <button type="submit">借款</button>
+          </form>
+          <p id="loanRates" class="muted"></p>
+        </div>
+      </section>
+
+      <!-- 子頁：投資唯讀 -->
+      <section class="page" data-page="invest" hidden>
+        <div class="block">
+          <h2>持股</h2>
+          <div id="holdList" class="stack compact muted"></div>
+          <p class="hint">下單請回手機；此處僅供對照。</p>
+        </div>
+      </section>
+
+      <!-- 子頁：設定／同步 -->
+      <section class="page" data-page="settings" hidden>
+        <div class="block">
+          <h2>匯出同步包</h2>
+          <p class="hint">手機修好後，貼到 App「設定 → 指令控制台」。</p>
+          <button type="button" id="btnExport2" class="primary">匯出並複製</button>
+          <pre id="exportPreview" class="export" hidden></pre>
+        </div>
+        <div class="block">
+          <h2>changelog</h2>
+          <div id="changelogList" class="stack compact"></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabbar" aria-label="主分頁">
+      <button type="button" class="tab active" data-tab="checkin"><span class="tab-ico">✓</span>打卡</button>
+      <button type="button" class="tab" data-tab="tasks"><span class="tab-ico">☰</span>任務</button>
+      <button type="button" class="tab" data-tab="exam"><span class="tab-ico">📘</span>考試</button>
+      <button type="button" class="tab" data-tab="wallet"><span class="tab-ico">👛</span>錢包</button>
+      <button type="button" class="tab" data-tab="fun"><span class="tab-ico">🎲</span>娛樂</button>
+    </nav>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

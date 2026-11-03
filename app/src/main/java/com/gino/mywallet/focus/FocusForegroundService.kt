@@ -7,6 +7,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.ServiceCompat
+import com.gino.mywallet.domain.FocusMode
 import com.gino.mywallet.domain.FocusRules
 import com.gino.mywallet.notify.NotificationHelper
 import com.gino.mywallet.notify.NotifyIds
@@ -27,6 +28,7 @@ class FocusForegroundService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        FocusSessionController.attach(applicationContext)
         when (intent?.action) {
             ACTION_START -> {
                 FocusSessionController.startFresh()
@@ -47,8 +49,11 @@ class FocusForegroundService : Service() {
                 stopSelfSafe()
             }
             else -> {
-                if (FocusSessionController.snapshot().phase == FocusPhase.Idle) {
-                    FocusSessionController.startFresh()
+                // START_STICKY 重啟：只還原，絕不 startFresh（否則時間／主題歸零）
+                FocusSessionController.restoreIfNeeded()
+                if (!FocusSessionController.hasActiveSession()) {
+                    stopSelfSafe()
+                    return START_NOT_STICKY
                 }
                 startFg()
                 startLoop()
@@ -61,8 +66,8 @@ class FocusForegroundService : Service() {
         val s = FocusSessionController.snapshot()
         val notif = NotificationHelper.focusOngoing(
             this,
-            "專注進行中",
-            ongoingText(s.displayMs, s.cashYuan, s.tickets, s.phase)
+            titleFor(s),
+            ongoingText(s)
         )
         when {
             Build.VERSION.SDK_INT >= 34 -> {
@@ -87,9 +92,23 @@ class FocusForegroundService : Service() {
                 val delayMs = Random.nextLong(3_000L, 5_001L)
                 delay(delayMs)
                 val phase = FocusSessionController.snapshot().phase
-                if (phase == FocusPhase.Settled || phase == FocusPhase.Idle) break
+                if (phase == FocusPhase.Settled ||
+                    phase == FocusPhase.Idle ||
+                    phase == FocusPhase.Failed
+                ) {
+                    break
+                }
+                if (phase == FocusPhase.ShortComplete) {
+                    refreshOngoing()
+                    continue
+                }
                 FocusSessionController.onTick(UsageAccess.isOurAppForeground(this@FocusForegroundService))
                 refreshOngoing()
+                val after = FocusSessionController.snapshot().phase
+                if (after == FocusPhase.Failed || after == FocusPhase.ShortComplete) {
+                    refreshOngoing()
+                    if (after == FocusPhase.Failed) break
+                }
             }
         }
         // 另開 UI 刷新節奏（約 1s）
@@ -97,10 +116,20 @@ class FocusForegroundService : Service() {
             while (isActive) {
                 delay(1_000L)
                 val phase = FocusSessionController.snapshot().phase
-                if (phase == FocusPhase.Settled || phase == FocusPhase.Idle) break
+                if (phase == FocusPhase.Settled ||
+                    phase == FocusPhase.Idle ||
+                    phase == FocusPhase.Failed
+                ) {
+                    break
+                }
+                if (phase == FocusPhase.ShortComplete) {
+                    refreshOngoing()
+                    continue
+                }
                 if (phase == FocusPhase.Running) {
                     FocusSessionController.onTick(UsageAccess.isOurAppForeground(this@FocusForegroundService))
                     refreshOngoing()
+                    if (FocusSessionController.snapshot().phase == FocusPhase.Failed) break
                 }
             }
         }
@@ -114,20 +143,43 @@ class FocusForegroundService : Service() {
             NotifyIds.NOTIF_FOCUS,
             NotificationHelper.focusOngoing(
                 this,
-                if (s.phase == FocusPhase.Paused) "專注已暫停" else "專注進行中",
-                ongoingText(s.displayMs, s.cashYuan, s.tickets, s.phase)
+                titleFor(s),
+                ongoingText(s)
             )
         )
     }
 
-    private fun ongoingText(ms: Long, cash: Int, tickets: Int, phase: FocusPhase): String {
+    private fun titleFor(s: FocusUiState): String = when (s.phase) {
+        FocusPhase.Paused -> "專注已暫停"
+        FocusPhase.ShortComplete -> "短期專注完成"
+        FocusPhase.Failed -> "短期專注失敗"
+        else -> if (s.mode == FocusMode.Short) "短期專注中" else "專注進行中"
+    }
+
+    private fun ongoingText(s: FocusUiState): String {
+        val cash = s.cashYuan
         val sign = if (cash >= 0) "+$cash" else "$cash"
-        val status = when (phase) {
-            FocusPhase.Paused -> "暫停"
-            FocusPhase.Running -> if (FocusRules.rewardMinutes(ms) >= FocusRules.MAX_REWARD_MINUTES) "獎勵已滿" else "計時中"
-            else -> ""
+        return when {
+            s.phase == FocusPhase.ShortComplete -> {
+                val reward = s.shortDuration?.rewardYuan ?: 0
+                "已完成 · 可領 +$reward 或轉長期"
+            }
+            s.phase == FocusPhase.Failed -> "$sign 元 · 將結算待轉移"
+            s.mode == FocusMode.Short -> {
+                val target = s.shortDuration?.targetMs ?: 0L
+                val remain = (target - s.displayMs).coerceAtLeast(0L)
+                "${FocusRules.formatCountdown(remain)} · 押金 $sign · 離開即失敗"
+            }
+            else -> {
+                val status = when (s.phase) {
+                    FocusPhase.Paused -> "暫停"
+                    FocusPhase.Running ->
+                        if (s.rewardCapped) "獎勵已滿" else "計時中"
+                    else -> ""
+                }
+                "${FocusRules.formatElapsed(s.displayMs)} · $sign 元 · 券預算${s.ticketEvYuan} · $status"
+            }
         }
-        return "${FocusRules.formatElapsed(ms)} · $sign 元 · 券預算${FocusRules.ticketEvYuan(ms)} · $status"
     }
 
     private fun stopSelfSafe() {

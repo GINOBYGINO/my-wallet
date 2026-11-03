@@ -1,0 +1,1388 @@
+{
+  "schema": "mywallet-cmd/v1",
+  "mode": "apply",
+  "note": "115-1 學習計畫：GPA／外校卷 26 張／CPE。課內作業優先；10 月前不深挖 DP。",
+  "commands": [
+    {
+      "op": "semester.set",
+      "week1Monday": "2026-09-07",
+      "weeks": 18
+    },
+    {
+      "op": "course.replace_all",
+      "courses": [
+        {
+          "title": "程式設計（一）",
+          "weekday": 1,
+          "periodStart": 3,
+          "periodEnd": 4,
+          "location": "水湳 卓越大樓 4 樓 404 電腦教室"
+        },
+        {
+          "title": "普通心理學",
+          "weekday": 1,
+          "periodStart": 5,
+          "periodEnd": 6,
+          "location": "水湳 關懷大樓 2 樓 203"
+        },
+        {
+          "title": "AI 在輔助醫學上的應用實作",
+          "weekday": 1,
+          "periodStart": 7,
+          "periodEnd": 8,
+          "location": "水湳 卓越大樓 4 樓 404"
+        },
+        {
+          "title": "體育必修：網球",
+          "weekday": 2,
+          "periodStart": 3,
+          "periodEnd": 4,
+          "location": "水湳網球場"
+        },
+        {
+          "title": "微積分",
+          "weekday": 2,
+          "periodStart": 5,
+          "periodEnd": 6,
+          "location": "英才 互助大樓 5B02"
+        },
+        {
+          "title": "醫療場域沉浸式實習（一）",
+          "weekday": 2,
+          "periodStart": 7,
+          "periodEnd": 8,
+          "location": "英才 互助大樓 5B03"
+        },
+        {
+          "title": "計算機概論",
+          "weekday": 3,
+          "periodStart": 5,
+          "periodEnd": 6,
+          "location": "英才 互助大樓 5B02"
+        },
+        {
+          "title": "英文（B）：閱讀與字彙（一）",
+          "weekday": 7,
+          "periodStart": 3,
+          "periodEnd": 4,
+          "location": "水湳 關懷大樓 2 樓 204"
+        }
+      ]
+    },
+    {
+      "op": "plan.import",
+      "id": "115-1",
+      "title": "115-1 學習計畫",
+      "note": "三層分開：課內 GPA、微積分打底（26 張外校卷）、CPE 上分。練習軸是蔡老師每周三單元。",
+      "items": [
+        {
+          "title": "預習數列與收斂（不刷外校卷）",
+          "category": "學業",
+          "ticketLevel": 3,
+          "appear": {
+            "date": "2026-09-10"
+          },
+          "due": {
+            "date": "2026-09-10",
+            "time": "21:30"
+          },
+          "note": "第一張外校卷 9/17 才開始；今晚只預習"
+        },
+        {
+          "title": "外校卷 A：11.1 Sequences",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-17"
+          },
+          "due": {
+            "date": "2026-09-17",
+            "time": "21:30"
+          },
+          "note": "當週單元「數列與收斂」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：2.3 Limit Laws",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-24"
+          },
+          "due": {
+            "date": "2026-09-24",
+            "time": "21:30"
+          },
+          "note": "當週單元「極限」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：2.5 Continuity",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-01"
+          },
+          "due": {
+            "date": "2026-10-01",
+            "time": "21:30"
+          },
+          "note": "當週單元「連續與極值」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：2.4 ε-δ",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-08"
+          },
+          "due": {
+            "date": "2026-10-08",
+            "time": "21:30"
+          },
+          "note": "當週單元「中間值定理」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：2.8 The Derivative as a Function",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-15"
+          },
+          "due": {
+            "date": "2026-10-15",
+            "time": "21:30"
+          },
+          "note": "當週單元「微分」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：3.3 Trigonometric",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-22"
+          },
+          "due": {
+            "date": "2026-10-22",
+            "time": "21:30"
+          },
+          "note": "當週單元「微分技巧」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：3.5 Implicit",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-05"
+          },
+          "due": {
+            "date": "2026-11-05",
+            "time": "21:30"
+          },
+          "note": "當週單元「微分技巧」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：3.9 Related Rates",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-12"
+          },
+          "due": {
+            "date": "2026-11-12",
+            "time": "21:30"
+          },
+          "note": "當週單元「微分與極值」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：4.5 Curve Sketching",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-19"
+          },
+          "due": {
+            "date": "2026-11-19",
+            "time": "21:30"
+          },
+          "note": "當週單元「微分與極值」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：4.2 Mean Value Theorem",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-26"
+          },
+          "due": {
+            "date": "2026-11-26",
+            "time": "21:30"
+          },
+          "note": "當週單元「均值定理」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：5.1 Areas and Distances",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-03"
+          },
+          "due": {
+            "date": "2026-12-03",
+            "time": "21:30"
+          },
+          "note": "當週單元「積分」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：5.3 FTC",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-10"
+          },
+          "due": {
+            "date": "2026-12-10",
+            "time": "21:30"
+          },
+          "note": "當週單元「微積分基本定理」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 A：7.1 Integration by Parts",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-17"
+          },
+          "due": {
+            "date": "2026-12-17",
+            "time": "21:30"
+          },
+          "note": "當週單元「積分技巧」· 周四晚限時對答案 · 陽明交大分章"
+        },
+        {
+          "title": "外校卷 B：11.2 Series",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-21",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-09-21",
+            "time": "17:00"
+          },
+          "note": "同一單元「數列與收斂；若還沒教級數可改期」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：11.2 Series",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-09-21"
+          },
+          "due": {
+            "date": "2026-09-21",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：2.6 Limits at Infinity",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-28",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-09-28",
+            "time": "17:00"
+          },
+          "note": "同一單元「極限」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：2.6 Limits at Infinity",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-09-28"
+          },
+          "due": {
+            "date": "2026-09-28",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：4.1 Maximum and Minimum Values",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-05",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-05",
+            "time": "17:00"
+          },
+          "note": "同一單元「連續與極值」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：4.1 Maximum and Minimum Values",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-10-05"
+          },
+          "due": {
+            "date": "2026-10-05",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：2.5 再練 IVT",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-12",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-12",
+            "time": "17:00"
+          },
+          "note": "同一單元「中間值定理」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：2.5 再練 IVT",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-10-12"
+          },
+          "due": {
+            "date": "2026-10-12",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：3.1 Polynomials and Exponential",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-19",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-19",
+            "time": "17:00"
+          },
+          "note": "同一單元「微分」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：3.1 Polynomials and Exponential",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-10-19"
+          },
+          "due": {
+            "date": "2026-10-19",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：3.4 Chain Rule",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-26",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-26",
+            "time": "17:00"
+          },
+          "note": "同一單元「微分技巧」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：3.4 Chain Rule",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-10-26"
+          },
+          "due": {
+            "date": "2026-10-26",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：3.6 Logarithmic",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-09",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-09",
+            "time": "17:00"
+          },
+          "note": "同一單元「微分技巧」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：3.6 Logarithmic",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-09"
+          },
+          "due": {
+            "date": "2026-11-09",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：4.3 Shape of a Graph",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-16",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-16",
+            "time": "17:00"
+          },
+          "note": "同一單元「微分與極值」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：4.3 Shape of a Graph",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-16"
+          },
+          "due": {
+            "date": "2026-11-16",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：4.7 Optimization",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-23",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-23",
+            "time": "17:00"
+          },
+          "note": "同一單元「微分與極值」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：4.7 Optimization",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-23"
+          },
+          "due": {
+            "date": "2026-11-23",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：4.4 L'Hospital",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-30",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-30",
+            "time": "17:00"
+          },
+          "note": "同一單元「均值定理」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：4.4 L'Hospital",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-30"
+          },
+          "due": {
+            "date": "2026-11-30",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：5.2 Definite Integral",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-07",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-12-07",
+            "time": "17:00"
+          },
+          "note": "同一單元「積分」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：5.2 Definite Integral",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-12-07"
+          },
+          "due": {
+            "date": "2026-12-07",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：5.5 Substitution",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-14",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-12-14",
+            "time": "17:00"
+          },
+          "note": "同一單元「微積分基本定理」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：5.5 Substitution",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-12-14"
+          },
+          "due": {
+            "date": "2026-12-14",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "外校卷 B：7.2 Trigonometric Integrals",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-21",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-12-21",
+            "time": "17:00"
+          },
+          "note": "同一單元「積分技巧」· 週一午 · 共 26 張之一"
+        },
+        {
+          "title": "微積分錯題整理：7.2 Trigonometric Integrals",
+          "category": "學業",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-12-21"
+          },
+          "due": {
+            "date": "2026-12-21",
+            "time": "21:30"
+          },
+          "note": "把 A／B 錯因寫進 templates/calculus-error-log.md"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-09-11",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-09-11",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-09-18",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-09-18",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-09-25",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-09-25",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠 · 中秋可改期"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-10-02",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-02",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-10-09",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-09",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-10-16",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-16",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-10-23",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-23",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-10-30",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-10-30",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-11-06",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-06",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-11-13",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-13",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-11-20",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-20",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-11-27",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-11-27",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-12-04",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-12-04",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-12-11",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-12-11",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "課內作業（GPA 優先）",
+          "category": "學業",
+          "ticketLevel": 6,
+          "appear": {
+            "date": "2026-12-18",
+            "time": "14:00"
+          },
+          "due": {
+            "date": "2026-12-18",
+            "time": "17:00"
+          },
+          "note": "蔡老師課內作業優先，外校卷不能排擠"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-09-16"
+          },
+          "due": {
+            "date": "2026-09-16",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-09-23"
+          },
+          "due": {
+            "date": "2026-09-23",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-09-30"
+          },
+          "due": {
+            "date": "2026-09-30",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-10-07"
+          },
+          "due": {
+            "date": "2026-10-07",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-10-14"
+          },
+          "due": {
+            "date": "2026-10-14",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-10-21"
+          },
+          "due": {
+            "date": "2026-10-21",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-04"
+          },
+          "due": {
+            "date": "2026-11-04",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-11"
+          },
+          "due": {
+            "date": "2026-11-11",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-18"
+          },
+          "due": {
+            "date": "2026-11-18",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-11-25"
+          },
+          "due": {
+            "date": "2026-11-25",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-12-02"
+          },
+          "due": {
+            "date": "2026-12-02",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-12-09"
+          },
+          "due": {
+            "date": "2026-12-09",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "專案時段",
+          "category": "專案",
+          "ticketLevel": 4,
+          "appear": {
+            "date": "2026-12-16"
+          },
+          "due": {
+            "date": "2026-12-16",
+            "time": "21:30"
+          },
+          "note": "先上完當天課再排"
+        },
+        {
+          "title": "CPE：UVa 10035、10783、11332",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-11"
+          },
+          "due": {
+            "date": "2026-09-11",
+            "time": "21:30"
+          },
+          "note": "進位／奇數和／數字和 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10041、299、10008",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-15"
+          },
+          "due": {
+            "date": "2026-09-15",
+            "time": "21:30"
+          },
+          "note": "中位數、交換排序、字頻 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 272、10929、10038",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-18"
+          },
+          "due": {
+            "date": "2026-09-18",
+            "time": "21:30"
+          },
+          "note": "字串、11 的倍數、Jolly · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10189、118、11150",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-22"
+          },
+          "due": {
+            "date": "2026-09-22",
+            "time": "21:30"
+          },
+          "note": "模擬 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 572、439、10004",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-09-29"
+          },
+          "due": {
+            "date": "2026-09-29",
+            "time": "21:30"
+          },
+          "note": "DFS／BFS 起手；10/6 前至少做完 572、439 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 459、532、336",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-02"
+          },
+          "due": {
+            "date": "2026-10-02",
+            "time": "21:30"
+          },
+          "note": "圖論 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10653、469",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-09"
+          },
+          "due": {
+            "date": "2026-10-09",
+            "time": "21:30"
+          },
+          "note": "BFS／DFS · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 11953、11518",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-13"
+          },
+          "due": {
+            "date": "2026-10-13",
+            "time": "21:30"
+          },
+          "note": "DFS · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 429、10420",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-16"
+          },
+          "due": {
+            "date": "2026-10-16",
+            "time": "21:30"
+          },
+          "note": "BFS／字串 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10226、10062",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-20"
+          },
+          "due": {
+            "date": "2026-10-20",
+            "time": "21:30"
+          },
+          "note": "排序、map · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 11417、10235",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-23"
+          },
+          "due": {
+            "date": "2026-10-23",
+            "time": "21:30"
+          },
+          "note": "數論、質數 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10908、10242",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-27"
+          },
+          "due": {
+            "date": "2026-10-27",
+            "time": "21:30"
+          },
+          "note": "幾何 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 12019、10101",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-10-30"
+          },
+          "due": {
+            "date": "2026-10-30",
+            "time": "21:30"
+          },
+          "note": "日期、進位字串 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 11005、10931",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-03"
+          },
+          "due": {
+            "date": "2026-11-03",
+            "time": "21:30"
+          },
+          "note": "進位 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10050、10193",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-06"
+          },
+          "due": {
+            "date": "2026-11-06",
+            "time": "21:30"
+          },
+          "note": "週期、GCD · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10252、490",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-10"
+          },
+          "due": {
+            "date": "2026-11-10",
+            "time": "21:30"
+          },
+          "note": "字串 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10222、11349",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-13"
+          },
+          "due": {
+            "date": "2026-11-13",
+            "time": "21:30"
+          },
+          "note": "字串、矩陣 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10170、10268",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-17"
+          },
+          "due": {
+            "date": "2026-11-17",
+            "time": "21:30"
+          },
+          "note": "數學 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10812、11461",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-20"
+          },
+          "due": {
+            "date": "2026-11-20",
+            "time": "21:30"
+          },
+          "note": "數學 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 11063、10093",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-24"
+          },
+          "due": {
+            "date": "2026-11-24",
+            "time": "21:30"
+          },
+          "note": "數列、進位 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 948、10019",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-11-27"
+          },
+          "due": {
+            "date": "2026-11-27",
+            "time": "21:30"
+          },
+          "note": "進位、位元 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10190、10922",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-01"
+          },
+          "due": {
+            "date": "2026-12-01",
+            "time": "21:30"
+          },
+          "note": "數學 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10221、10642",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-04"
+          },
+          "due": {
+            "date": "2026-12-04",
+            "time": "21:30"
+          },
+          "note": "幾何 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10057、10409",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-11"
+          },
+          "due": {
+            "date": "2026-12-11",
+            "time": "21:30"
+          },
+          "note": "中位數、模擬 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE：UVa 10415、10056",
+          "category": "學業",
+          "ticketLevel": 5,
+          "appear": {
+            "date": "2026-12-15"
+          },
+          "due": {
+            "date": "2026-12-15",
+            "time": "21:30"
+          },
+          "note": "模擬、機率 · C++ · 瘋狂程設／vjudge／UVa；做不完拖下一格，不跳題"
+        },
+        {
+          "title": "CPE 10/6 報名",
+          "category": "學業",
+          "ticketLevel": 7,
+          "appear": {
+            "date": "2026-09-22"
+          },
+          "due": {
+            "date": "2026-10-02",
+            "time": "23:59"
+          },
+          "note": "官網註冊後報名，大專生免費；報名後無故缺席會取消下一場。窗口 9/22–10/02"
+        },
+        {
+          "title": "CPE 12/8 報名",
+          "category": "學業",
+          "ticketLevel": 7,
+          "appear": {
+            "date": "2026-11-24"
+          },
+          "due": {
+            "date": "2026-12-04",
+            "time": "23:59"
+          },
+          "note": "本學期主戰場報名窗口 11/24–12/04；報名後無故缺席會取消下一場"
+        }
+      ]
+    },
+    {
+      "op": "event.create",
+      "title": "CPE 10/6",
+      "date": "2026-10-06",
+      "time": "18:40",
+      "note": "穩定 2 題、挑戰 3 題；報到約 17:30；當日一般程式時段取消"
+    },
+    {
+      "op": "event.create",
+      "title": "微積分期中",
+      "date": "2026-10-28",
+      "note": "GPA；當日專案暫停"
+    },
+    {
+      "op": "event.create",
+      "title": "CPE 12/8",
+      "date": "2026-12-08",
+      "time": "18:40",
+      "note": "本學期主戰場：3–4 題；當日一般程式時段取消"
+    },
+    {
+      "op": "event.create",
+      "title": "微積分期末",
+      "date": "2026-12-23",
+      "note": "GPA；鐘點未公布前先佔下午與晚上"
+    },
+    {
+      "op": "event.create",
+      "title": "中秋（練習可改期）",
+      "date": "2026-09-25",
+      "note": "課內作業可改期"
+    },
+    {
+      "op": "event.create",
+      "title": "CPE 10/6 報名開始",
+      "date": "2026-09-22",
+      "note": "大專生免費；10/02 截止"
+    },
+    {
+      "op": "event.create",
+      "title": "CPE 12/8 報名開始",
+      "date": "2026-11-24",
+      "note": "12/04 截止"
+    }
+  ]
+}

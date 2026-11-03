@@ -44,13 +44,41 @@ fun SectionTitle(text: String) {
 }
 
 @Composable
-fun MoneyField(value: String, onChange: (String) -> Unit, label: String = "金額（元）") {
+fun MoneyField(
+    value: String,
+    onChange: (String) -> Unit,
+    label: String = "金額（元）",
+    allowDecimal: Boolean = false,
+) {
     OutlinedTextField(
         value = value,
-        onValueChange = { raw -> onChange(raw.filter { it.isDigit() }) },
+        onValueChange = { raw ->
+            if (!allowDecimal) {
+                onChange(raw.filter { it.isDigit() })
+                return@OutlinedTextField
+            }
+            onChange(
+                buildString {
+                    var seenDot = false
+                    for (c in raw) {
+                        when {
+                            c.isDigit() -> append(c)
+                            c == '.' && !seenDot -> {
+                                append(c)
+                                seenDot = true
+                            }
+                        }
+                    }
+                    val dot = indexOf('.')
+                    if (dot >= 0 && length > dot + 3) setLength(dot + 3)
+                }
+            )
+        },
         label = { Text(label) },
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = if (allowDecimal) KeyboardType.Decimal else KeyboardType.Number
+        ),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -63,7 +91,8 @@ fun WalletPicker(
     selectedId: String?,
     onSelect: (String) -> Unit,
     filter: (WalletEntity) -> Boolean = { true },
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    locked: Boolean = false
 ) {
     var open by remember { mutableStateOf(false) }
     val options = wallets.filter(filter)
@@ -74,7 +103,7 @@ fun WalletPicker(
             Modifier
                 .fillMaxWidth()
                 .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(10.dp))
-                .clickable { open = true }
+                .clickable(enabled = !locked) { open = true }
                 .padding(horizontal = 12.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -94,10 +123,14 @@ fun WalletPicker(
                     )
                 }
             }
-            Text("更換", fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
+            Text(
+                if (locked) "固定" else "更換",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.secondary
+            )
         }
     }
-    if (open) {
+    if (open && !locked) {
         ModalBottomSheet(
             onDismissRequest = { open = false },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

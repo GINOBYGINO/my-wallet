@@ -1,9 +1,18 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
 }
+
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+fun localProp(key: String, default: String = ""): String =
+    (localProps.getProperty(key) ?: default).replace("\\", "\\\\").replace("\"", "\\\"")
 
 android {
     namespace = "com.gino.mywallet"
@@ -13,8 +22,10 @@ android {
         applicationId = "com.gino.mywallet"
         minSdk = 26
         targetSdk = 36
-        versionCode = 10900
-        versionName = "1.9.0"
+        versionCode = 11400
+        versionName = "1.14.0"
+        buildConfigField("String", "DRIVE_OAUTH_CLIENT_ID", "\"${localProp("drive.oauth.clientId")}\"")
+        buildConfigField("String", "DRIVE_OAUTH_CLIENT_SECRET", "\"${localProp("drive.oauth.clientSecret")}\"")
     }
 
     buildTypes {
@@ -61,4 +72,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation("com.google.code.gson:gson:2.11.0")
+    implementation("androidx.browser:browser:1.8.0")
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
+
+    testImplementation("junit:junit:4.13.2")
 }

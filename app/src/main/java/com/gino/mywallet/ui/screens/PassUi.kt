@@ -70,6 +70,8 @@ import androidx.compose.ui.unit.sp
 
 import com.gino.mywallet.data.entity.PassAdvanceResult
 
+import com.gino.mywallet.domain.EconomyEngine
+
 import com.gino.mywallet.data.entity.PassSeasonEntity
 
 import com.gino.mywallet.data.entity.PassTierEntity
@@ -100,11 +102,11 @@ private fun passRewardKind(label: String): PassRewardKind = when {
 
     label.contains("公益") || label.contains("基準") -> PassRewardKind.RELIEF
 
-    label.contains("券") && (label.contains("🍔") || label.contains("$") || label.contains("＋")) -> PassRewardKind.COMBO
+    label.contains("券") && (label.contains("🍔") || label.contains("💰") || label.contains("$") || label.contains("＋")) -> PassRewardKind.COMBO
 
     label.contains("券") -> PassRewardKind.TICKET
 
-    label.contains("🍔") || label.contains("$") -> PassRewardKind.LIVING
+    label.contains("🍔") || label.contains("💰") || label.contains("$") -> PassRewardKind.LIVING
 
     else -> PassRewardKind.LIVING
 
@@ -124,7 +126,7 @@ private fun passRewardIcon(label: String): String = when (passRewardKind(label))
 
     PassRewardKind.TICKET -> "🎫"
 
-    PassRewardKind.LIVING -> "🍔"
+    PassRewardKind.LIVING -> "💰"
 
 }
 
@@ -218,7 +220,7 @@ fun PassMiniBar(
 
                     Text(
 
-                        "${season.progress}/60",
+                        "${season.progress}/${EconomyEngine.PASS_LENGTH}",
 
                         fontWeight = FontWeight.Bold,
 
@@ -236,7 +238,7 @@ fun PassMiniBar(
 
             LinearProgressIndicator(
 
-                progress = { (season.progress.toFloat() / 60f).coerceIn(0f, 1f) },
+                progress = { (season.progress.toFloat() / EconomyEngine.PASS_LENGTH).coerceIn(0f, 1f) },
 
                 modifier = Modifier.fillMaxWidth().height(4.dp)
 
@@ -251,101 +253,113 @@ fun PassMiniBar(
 
 
 @Composable
-
 fun PassFullScreen(
-
     season: PassSeasonEntity?,
-
     tiers: List<PassTierEntity>,
-
     onClaim: (Long) -> Unit = {},
-
     claimFlash: PassAdvanceResult? = null,
-
-    onDismissClaimFlash: () -> Unit = {}
-
+    onDismissClaimFlash: () -> Unit = {},
+    milestone: com.gino.mywallet.domain.MilestoneSnapshot? = null,
+    onClaimTaskMilestones: () -> Unit = {},
+    onClaimFocusMilestones: () -> Unit = {},
+    onAppear: () -> Unit = {}
 ) {
+    LaunchedEffect(Unit) { onAppear() }
 
     if (season == null) {
-
         Text("尚無進行中賽季", color = MaterialTheme.colorScheme.onSurfaceVariant)
-
         return
-
     }
 
     Box(Modifier.fillMaxSize()) {
-
         Column {
-
             PassHeroRow(season)
-
             Spacer(Modifier.height(12.dp))
-
-            if (season.progress >= 60) {
-
+            PassMilestoneCard(
+                milestone = milestone,
+                onClaimTask = onClaimTaskMilestones,
+                onClaimFocus = onClaimFocusMilestones
+            )
+            Spacer(Modifier.height(12.dp))
+            if (season.progress >= EconomyEngine.PASS_LENGTH) {
                 Text("本月通關！", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-
                 Spacer(Modifier.height(8.dp))
-
-            } else if (season.progress >= 50) {
-
+            } else if (season.progress >= EconomyEngine.PASS_SPRINT_FROM) {
                 Card(
-
                     modifier = Modifier.fillMaxWidth(),
-
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
-
                 ) {
-
                     Text(
-
-                        "終局衝刺 · 距通關還有 ${(60 - season.progress).coerceAtLeast(0)} 格",
-
+                        "終局衝刺 · 距通關還有 ${(EconomyEngine.PASS_LENGTH - season.progress).coerceAtLeast(0)} 格",
                         modifier = Modifier.padding(12.dp),
-
                         fontWeight = FontWeight.Bold,
-
                         fontSize = 14.sp
-
                     )
-
                 }
-
                 Spacer(Modifier.height(12.dp))
-
             }
-
             val sorted = tiers.sortedBy { it.tierIndex }
-
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-
                 sorted.forEach { tier ->
-
                     PassTierRow(
-
                         tier = tier,
-
                         progress = season.progress,
-
                         onClaim = onClaim
-
                     )
-
                 }
-
             }
-
         }
-
         claimFlash?.let { flash ->
-
             PassClaimFlash(result = flash, onDismiss = onDismissClaimFlash)
-
         }
-
     }
+}
 
+@Composable
+private fun PassMilestoneCard(
+    milestone: com.gino.mywallet.domain.MilestoneSnapshot?,
+    onClaimTask: () -> Unit,
+    onClaimFocus: () -> Unit
+) {
+    val m = milestone
+    val taskProg = (m?.taskProgress ?: 0).toFloat() / com.gino.mywallet.domain.MilestoneTrack.TASK_STEP
+    val focusProg = ((m?.focusProgressMs ?: 0L).toFloat() / com.gino.mywallet.domain.MilestoneTrack.FOCUS_STEP_MS)
+    val focusH = ((m?.focusProgressMs ?: 0L) / 3_600_000.0)
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("累積領獎", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            Text(
+                "任務 ${m?.taskProgress ?: 0}/${com.gino.mywallet.domain.MilestoneTrack.TASK_STEP}" +
+                    if ((m?.claimableTasks ?: 0) > 0) " · ×${m?.claimableTasks}" else "",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            LinearProgressIndicator(
+                progress = { taskProg.coerceIn(0f, 1f) },
+                modifier = Modifier.fillMaxWidth().height(6.dp)
+            )
+            Button(
+                onClick = onClaimTask,
+                enabled = (m?.claimableTasks ?: 0) > 0,
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("領任務") }
+            Text(
+                "專注 ${"%.1f".format(focusH)}/24h" +
+                    if ((m?.claimableFocus ?: 0) > 0) " · ×${m?.claimableFocus}" else "",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            LinearProgressIndicator(
+                progress = { focusProg.coerceIn(0f, 1f) },
+                modifier = Modifier.fillMaxWidth().height(6.dp)
+            )
+            Button(
+                onClick = onClaimFocus,
+                enabled = (m?.claimableFocus ?: 0) > 0,
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("領專注") }
+        }
+    }
 }
 
 
@@ -416,7 +430,10 @@ private fun PassClaimFlash(result: PassAdvanceResult, onDismiss: () -> Unit) {
 
                 Text(
 
-                    "第 ${result.tierIndex} 格 · ${result.label}",
+                    buildString {
+                        append("第 ${result.tierIndex} 格 · ${result.label}")
+                        if (result.prizeHint.isNotBlank()) append(result.prizeHint)
+                    },
 
                     fontWeight = FontWeight.Bold,
 
@@ -442,7 +459,7 @@ private fun PassHeroRow(season: PassSeasonEntity) {
 
     val daysLeft = remember(season.endsAt) { passDaysLeft(season) }
 
-    val progressPercent = ((season.progress.toFloat() / 60f) * 100).toInt()
+    val progressPercent = ((season.progress.toFloat() / EconomyEngine.PASS_LENGTH) * 100).toInt()
 
     Card(
 
@@ -504,7 +521,7 @@ private fun PassHeroRow(season: PassSeasonEntity) {
 
                 )
 
-                Text("/ 60 · $progressPercent%", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                Text("/ ${EconomyEngine.PASS_LENGTH} · $progressPercent%", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
 
             }
 
@@ -530,7 +547,7 @@ private fun PassTierRow(tier: PassTierEntity, progress: Int, onClaim: (Long) -> 
 
     val isMilestone = tier.tierIndex in PASS_MILESTONE_TIERS
 
-    val isFinale = tier.tierIndex >= 50
+    val isFinale = tier.tierIndex >= EconomyEngine.PASS_SPRINT_FROM
 
 
 

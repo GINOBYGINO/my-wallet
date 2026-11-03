@@ -22,6 +22,10 @@ keystore.properties
 *.db-shm
 *.db-wal
 
+# PC 暫代表工作資料（含 changelog／同步包）
+/desktop/data/*
+!/desktop/data/.gitkeep
+
 # Kotlin
 .kotlin/
 

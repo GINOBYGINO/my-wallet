@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -16,7 +17,7 @@ object NotificationHelper {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val nm = context.getSystemService(NotificationManager::class.java) ?: return
         listOf(
-            Triple(NotifyIds.CHANNEL_LOTTERY, "抽獎冷卻", "冷卻券可領取提醒"),
+            Triple(NotifyIds.CHANNEL_LOTTERY, "打卡領券", "每日拉霸券與樂透開獎提醒"),
             Triple(NotifyIds.CHANNEL_TASK, "任務提醒", "任務時間到提醒"),
             Triple(NotifyIds.CHANNEL_CHARITY, "公益", "本月公益提醒"),
             Triple(NotifyIds.CHANNEL_COURSE, "課表", "上課前提醒"),
@@ -56,7 +57,8 @@ object NotificationHelper {
     ) {
         ensureChannels(context)
         val notif = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notify)
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher_foreground))
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
@@ -74,7 +76,8 @@ object NotificationHelper {
     fun focusOngoing(context: Context, title: String, body: String): android.app.Notification {
         ensureChannels(context)
         return NotificationCompat.Builder(context, NotifyIds.CHANNEL_FOCUS)
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notify)
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher_foreground))
             .setContentTitle(title)
             .setContentText(body)
             .setOngoing(true)

@@ -31,16 +31,30 @@ object NotificationScheduler {
         if (!enabled) return@withContext
 
         val lottery = db.lotteryDao().getState()
-        val nextFree = lottery?.nextFreeAt ?: 0L
-        if (nextFree > System.currentTimeMillis()) {
+        val nextMorning = app.engine.nextMorningSlotAt()
+        if (nextMorning > System.currentTimeMillis()) {
             scheduleExact(
                 context,
                 NotifyIds.REQ_LOTTERY,
-                nextFree,
+                nextMorning,
                 NotifyActions.TYPE_LOTTERY,
                 0L,
-                "抽獎冷卻可領",
-                "冷卻已結束，可以領取免費抽獎券"
+                "每日拉霸券",
+                "07:00 起可於打卡頁拉霸領取 1 張券"
+            )
+        }
+
+        val nextLotto = app.engine.nextLottoDrawAt()
+        if (nextLotto > System.currentTimeMillis()) {
+            val pending = lottery?.lottoPending ?: 0
+            scheduleExact(
+                context,
+                NotifyIds.REQ_LOTTO_DRAW,
+                nextLotto,
+                NotifyActions.TYPE_LOTTO_DRAW,
+                0L,
+                "樂透可開獎",
+                if (pending > 0) "本期已買 $pending 注，請到打卡頁手動開獎" else "樂透 18:00 開獎時間到"
             )
         }
 
@@ -58,23 +72,11 @@ object NotificationScheduler {
                     task.title
                 )
             }
-            val due = task.dueAt
-            if (due != null && due > System.currentTimeMillis()) {
-                val req = NotifyIds.REQ_TASK_DUE_BASE + task.id.toInt().coerceAtLeast(0)
-                scheduleExact(
-                    context,
-                    req,
-                    due,
-                    NotifyActions.TYPE_TASK_DUE,
-                    task.id,
-                    "任務到期",
-                    task.title
-                )
-            }
         }
 
         scheduleCharity(context, app)
-        scheduleCourses(context, db.courseDao().getAll())
+        val semester = app.engine.loadSemester()
+        scheduleCourses(context, db.courseDao().getAll(), semester)
         scheduleEvents(context, db.calendarEventDao().getAll())
         scheduleLoans(context, db.loanDao().getLoans())
     }
@@ -118,31 +120,34 @@ object NotificationScheduler {
 
     private fun scheduleCourses(
         context: Context,
-        courses: List<com.gino.mywallet.data.entity.CourseEntity>
+        courses: List<com.gino.mywallet.data.entity.CourseEntity>,
+        semester: com.gino.mywallet.domain.SemesterConfig
     ) {
         val now = LocalDateTime.now(zone)
         courses.forEachIndexed { index, course ->
             val dow = DayOfWeek.of(course.weekday)
             var date = now.toLocalDate().with(TemporalAdjusters.nextOrSame(dow))
-            val start = PeriodTimes.startOf(course.periodStart)
-            var classStart = LocalDateTime.of(date, start)
-            if (!classStart.isAfter(now)) {
-                date = date.with(TemporalAdjusters.next(dow))
-                classStart = LocalDateTime.of(date, start)
-            }
-            val notifyAt = classStart.minusMinutes(15)
-            if (notifyAt.isAfter(now)) {
-                val req = NotifyIds.REQ_COURSE_BASE + index
-                val timeLabel = PeriodTimes.formatPeriodRange(course.periodStart, course.periodEnd)
-                scheduleExact(
-                    context,
-                    req,
-                    notifyAt.atZone(zone).toInstant().toEpochMilli(),
-                    NotifyActions.TYPE_COURSE,
-                    course.id,
-                    "即將上課：${course.title}",
-                    "第${course.periodStart}-${course.periodEnd}節 $timeLabel｜${course.location}"
-                )
+            repeat(semester.weeks + 1) {
+                val start = PeriodTimes.startOf(course.periodStart)
+                val classStart = LocalDateTime.of(date, start)
+                if (classStart.isAfter(now) && course.occursOn(date, semester)) {
+                    val notifyAt = classStart.minusMinutes(15)
+                    if (notifyAt.isAfter(now)) {
+                        val req = NotifyIds.REQ_COURSE_BASE + index
+                        val timeLabel = PeriodTimes.formatPeriodRange(course.periodStart, course.periodEnd)
+                        scheduleExact(
+                            context,
+                            req,
+                            notifyAt.atZone(zone).toInstant().toEpochMilli(),
+                            NotifyActions.TYPE_COURSE,
+                            course.id,
+                            "即將上課：${course.title}",
+                            "第${course.periodStart}-${course.periodEnd}節 $timeLabel｜${course.location}"
+                        )
+                    }
+                    return@forEachIndexed
+                }
+                date = date.plusWeeks(1)
             }
         }
     }
@@ -245,13 +250,19 @@ object NotificationScheduler {
         val am = context.getSystemService(AlarmManager::class.java) ?: return
         val codes = buildList {
             add(NotifyIds.REQ_LOTTERY)
+            add(NotifyIds.REQ_LOTTO_DRAW)
             add(NotifyIds.REQ_CHARITY_MONTHLY)
             add(NotifyIds.REQ_CHARITY_DAILY)
             addAll((0 until 32).map { NotifyIds.REQ_COURSE_BASE + it })
             addAll((0 until 64).map { NotifyIds.REQ_TASK_BASE + it })
             addAll((0 until 64).map { NotifyIds.REQ_EVENT_BASE + it })
             addAll((0 until 64).map { NotifyIds.REQ_LOAN_BASE + it })
-            addAll((0 until 64).map { NotifyIds.REQ_TASK_DUE_BASE + it })
+            // 舊版任務到期／出現鬧鐘（已移除）
+            addAll((0 until 64).map { 17000 + it })
+            addAll((0 until 64).map { 19000 + it })
+            // 舊版 People/PRM 鬧鐘（已移除功能；取消殘留排程）
+            add(18001)
+            addAll((0 until 64).map { 18100 + it })
         }
         codes.forEach { code ->
             val intent = Intent(context, NotifyAlarmReceiver::class.java).apply {

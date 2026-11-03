@@ -5,7 +5,10 @@ enum class TicketKind(val symbol: String, val label: String) {
     SLOT("🎰", "拉霸"),
     BJ("🃏", "二十一點"),
     SCRATCH("🎫", "比大小"),
-    DRAW("🎴", "殺撲克");
+    DRAW("🎴", "殺撲克"),
+    LOTTO("🎟", "樂透"),
+    MATCH("🍬", "消消樂"),
+    MATH("🧮", "輪盤");
 
     fun title(): String = "$symbol $label"
 }
@@ -16,10 +19,21 @@ object GamePrizes {
     const val EV_BJ_YUAN = 5
     const val EV_SCRATCH_YUAN = 20
     const val EV_DRAW_YUAN = 10
+    const val EV_LOTTO_YUAN = 10
+    const val EV_MATCH_YUAN = 10
+    /** 輪盤：底金 +3；格 +4/+4/+3/+3/×2/×1.5/結算；續轉至結算 Monte Carlo ≈7.5 → 取整 8 */
+    const val EV_MATH_YUAN = 8
+    /** 每日五字猜中獎勵（券 EV；依難度；EV_WORDLE 為 NORMAL 別名） */
+    const val WORDLE_EASY_YUAN = 5
+    const val WORDLE_NORMAL_YUAN = 8
+    const val WORDLE_HARD_YUAN = 15
+    const val EV_WORDLE_YUAN = WORDLE_NORMAL_YUAN
 
-    /** 任務券包：每級預算＝level × 此值（元） */
+    /** 專注等「每單位」混券預算（元）。任務券級見 [ticketLevelBudgetYuan]。 */
     const val EV_PER_LEVEL_YUAN = 10
     const val MAX_TICKET_LEVEL = 9
+    /** 累積里程碑每次發券預算（元） */
+    const val MILESTONE_EV_YUAN = 300
 
     /** 二十一點：每張券 EV≈5；大獎／擊敗／安慰同步下修 */
     const val BJ_JACKPOT_CENTS = 88_00L
@@ -31,6 +45,9 @@ object GamePrizes {
         TicketKind.BJ -> EV_BJ_YUAN
         TicketKind.SCRATCH -> EV_SCRATCH_YUAN
         TicketKind.DRAW -> EV_DRAW_YUAN
+        TicketKind.LOTTO -> EV_LOTTO_YUAN
+        TicketKind.MATCH -> EV_MATCH_YUAN
+        TicketKind.MATH -> EV_MATH_YUAN
     }
 
     fun <T> pickWeighted(items: List<T>, weightOf: (T) -> Int): T {
@@ -43,16 +60,19 @@ object GamePrizes {
         }
     }
 
-    /** 混券權重：多發 🃏／🎫 */
+    /** 混券權重：多發 🃏／🎫；樂透／拉霸／消消／輪盤同權 */
     fun mixWeightOf(kind: TicketKind): Int = when (kind) {
         TicketKind.BJ -> 5
         TicketKind.SCRATCH -> 3
         TicketKind.DRAW -> 3
         TicketKind.SLOT -> 2
+        TicketKind.LOTTO -> 2
+        TicketKind.MATCH -> 2
+        TicketKind.MATH -> 2
     }
 
     fun expandTicketLevel(level: Int): Map<TicketKind, Int> =
-        expandEvBudget(level.coerceIn(1, MAX_TICKET_LEVEL) * EV_PER_LEVEL_YUAN)
+        expandEvBudget(ticketLevelBudgetYuan(level))
 
     /** 依 EV 預算（元）混發券；優先 🃏／🎫 */
     fun expandEvBudget(yuan: Int): Map<TicketKind, Int> {
@@ -83,6 +103,7 @@ object GamePrizes {
             if (n <= 0) null else "${k.symbol}×$n"
         }.joinToString(" ")
 
+    /** 每一級固定 +10 元 EV。 */
     fun ticketLevelBudgetYuan(level: Int): Int =
         level.coerceIn(1, MAX_TICKET_LEVEL) * EV_PER_LEVEL_YUAN
 
@@ -93,13 +114,15 @@ object GamePrizes {
     }
 }
 
-enum class EntertainmentGame(val kind: TicketKind) {
-    SLOT(TicketKind.SLOT),
+enum class EntertainmentGame(val kind: TicketKind?) {
     BLACKJACK21(TicketKind.BJ),
     SCRATCH(TicketKind.SCRATCH),
-    TRIPLE_DRAW(TicketKind.DRAW);
+    TRIPLE_DRAW(TicketKind.DRAW),
+    MATCH3(TicketKind.MATCH),
+    ROULETTE(TicketKind.MATH);
 
-    val title: String get() = kind.title()
+    val title: String
+        get() = kind!!.title()
 
     fun next(): EntertainmentGame {
         val all = entries

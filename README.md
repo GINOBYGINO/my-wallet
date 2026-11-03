@@ -1,9 +1,9 @@
 # 我的錢包（MyWallet）
 
-一款**離線、遊戲化**的 Android 個人生活與財務管理 App。  
+一款**遊戲化**的 Android 個人生活與財務管理 App。  
 把收入分配、借貸、任務、課表、專注計時與小遊戲獎勵整合在同一套虛擬經濟裡。
 
-> 本 App **不連網**、不蒐集個人資料；所有資料儲存在本機 SQLite（Room）。
+> 個人資料預設存在本機 SQLite（Room）。可選 **Google Drive「MyWallet-Bot」** 與 Grok Bot 交換簽章指令（需網路）。
 
 ## 功能概覽
 
@@ -11,16 +11,18 @@
 |------|------|
 | 錢包與經濟 | 多錢包分帳、月收入分配、借貸利率、中央透支 |
 | 任務 | 分類、到期日、重複規則、完成獎勵與懲罰 |
-| 娛樂 | 拉霸、二十一點、比大小、殺撲克（用任務券兌換） |
+| 打卡 | Wordle、通行證（**80** 格）、07:00 拉霸券、18:00 樂透（發券）、任務／專注累積領獎 |
+| 娛樂 | 拉霸、二十一點、比大小、殺撲克、消消樂、輪盤 |
 | 專注 | 計時獎勵現金與娛樂券 |
-| 通行證 | 60 格季節獎勵軌道 |
+| 通行證 | 80 格季節獎勵（只發券；獎池由 App 程式定義，不可用指令改） |
 | 課表／行程 | 本地課表、個人行程與通知 |
 | 指令控制台 | 匯出狀態報告，搭配 LLM 批次匯入任務／課表 |
+| Grok Bot | Drive inbox／outbox／snapshot 同步（前景 + 約每 15 分鐘背景） |
 
 ## 技術棧
 
-- Kotlin 2.0 · Jetpack Compose · Room · Coroutines
-- minSdk 26 · targetSdk 36 · 目前版本 **1.9.0**
+- Kotlin 2.0 · Jetpack Compose · Room · Coroutines · WorkManager
+- minSdk 26 · targetSdk 36 · 目前版本 **1.14.0**
 
 ---
 
@@ -75,6 +77,7 @@ APK 位置：`app/build/outputs/apk/debug/app-debug.apk`
 | 找不到 SDK | 確認 Android Studio 已安裝 SDK 36；`local.properties` 會自動產生 `sdk.dir` |
 | JDK 版本錯誤 | 使用 JDK 17+，在 Android Studio → Settings → Build Tools 指定 |
 | 專案路徑含中文 | 已設定 `android.overridePathCheck=true`，一般可正常編譯 |
+| Drive OAuth | 在 `local.properties` 設定 `drive.oauth.clientId`／`drive.oauth.clientSecret` |
 
 ---
 
@@ -102,8 +105,6 @@ git push -u origin my-custom-rules
 
 ### 常用自訂入口
 
-以下檔案是 fork 後最常改的地方：
-
 | 想改什麼 | 檔案 | 說明 |
 |----------|------|------|
 | **預設錢包名稱與數量** | `app/src/main/java/com/gino/mywallet/data/db/AppDatabase.kt` → `ensureSeed()` | 首次安裝寫入的錢包、分配比例、稅率 |
@@ -112,21 +113,20 @@ git push -u origin my-custom-rules
 | **各戶頭月利率** | `AppDatabase.kt` → `defaultWalletRates()` | 單位為 bp（500 = 5.00%/月） |
 | **抽獎／遊戲獎金** | `domain/game/GamePrizes.kt` | 各遊戲 EV、二十一點獎金等 |
 | **拉霸機率與獎項** | `domain/EconomyEngine.kt` → `companion object` 內 `SLOT_*` 常數 | 符號權重、現金獎額、三連機率 |
-| **通行證 60 格獎池** | `domain/EconomyEngine.kt` → `buildPassTiers()` | 每格獎勵內容 |
+| **通行證 80 格獎池** | `domain/PassTrack.kt`／`EconomyEngine.buildPassTiers()` | 改獎池後請遞增 `PASS_POOL_VERSION` |
 | **專注模式獎勵** | `domain/FocusRules.kt` | 每 4 分鐘現金、每 30 分鐘發券規則 |
-| **LLM 指令提示詞** | `domain/command/LlmCommandPrompt.kt` | 給 Cursor 等 AI 用的系統提示與錢包 id 對照 |
+| **LLM／Bot 指令提示詞** | `domain/command/LlmCommandPrompt.kt` | 全 op 欄位、範例、軟／硬信封規則 |
 | **App 顯示名稱** | `app/src/main/res/values/strings.xml` | `app_name` |
 | **套件名稱（進階）** | `app/build.gradle.kts` 的 `applicationId` + 目錄結構 | 若要上架 Play Store 建議改成自己的 package |
 
 ### 在 App 內調整（不需改程式碼）
-
-安裝後，多數設定可在 App 裡直接改：
 
 - **收入分配比例**：錢包頁 → 收入設定
 - **各戶頭利率**：市場頁
 - **課表／行程**：任務頁新增或編輯
 - **任務與獎懲**：任務頁
 - **清空重來**：設定頁 → 清空並重建（會恢復程式碼中的種子資料）
+- **Grok Bot**：設定頁 → 共用權杖、登入 Drive、立即同步
 
 ### 用 LLM 批次匯入
 
@@ -134,7 +134,17 @@ git push -u origin my-custom-rules
 2. 搭配 `LlmCommandPrompt.kt` 的提示詞，請 AI 產出 `mywallet-cmd` JSON
 3. 貼到設定 → 指令控制台 → 執行
 
-適合快速建立整學期課表或每週任務，不會動到餘額。
+### Grok Bot（Drive）
+
+```
+Grok Bot  ←→  Google Drive「MyWallet-Bot」  ←→  手機 App
+              snapshot.json / inbox / outbox / drafts
+```
+
+- Bot 讀 `snapshot.json`（含 revision、pass.tiers、taskHistory）
+- Bot 寫簽章信封到 `inbox/`；App 同步後寫 `outbox/`（含 `revision`）並更新 snapshot
+- **軟指令**（任務／課表／行程等）可忽略 revision；**硬指令**（金流／完成任務等）必須對齊 revision，且不可與軟指令混在同一信封
+- 前景回到 App 會同步；Drive 已連結時約每 15 分鐘背景同步一次
 
 ### 修改後如何安裝到自己的手機
 
@@ -152,8 +162,8 @@ gradlew.bat :app:assembleDebug  # 產生 APK 再手動安裝
 
 ```
 app/src/main/java/com/gino/mywallet/
-├── data/          # Room 實體、DAO、資料庫、種子資料
-├── domain/        # 經濟引擎、遊戲邏輯、指令解析
+├── data/          # Room 實體、DAO、資料庫、種子資料、Drive Bot prefs
+├── domain/        # 經濟引擎、遊戲邏輯、指令解析、Bot 同步閘門
 ├── focus/         # 專注計時前景服務
 ├── notify/        # 通知排程
 └── ui/            # Compose 畫面與 ViewModel
@@ -161,20 +171,23 @@ app/src/main/java/com/gino/mywallet/
 
 核心檔案：
 
-- `domain/EconomyEngine.kt` — 收入分配、借貸、抽獎、通行證
+- `domain/EconomyEngine.kt` — 收入分配、借貸、抽獎、通行證、snapshot
+- `domain/command/CommandParser.kt` — LLM／Bot 指令解析
+- `domain/bot/BotFolderSync.kt` — Drive inbox／outbox 同步
 - `ui/AppViewModel.kt` — UI 狀態
-- `domain/command/CommandParser.kt` — LLM 指令解析
 
 ## 隱私與權限
 
 | 權限 | 用途 |
 |------|------|
+| `INTERNET` | Google Drive Bot 同步（可選） |
 | `PACKAGE_USAGE_STATS` | 專注模式偵測是否切換 App（需使用者手動授權） |
 | `POST_NOTIFICATIONS` | 課表、行程、借貸提醒 |
 | `SCHEDULE_EXACT_ALARM` | 精準排程通知 |
 | `FOREGROUND_SERVICE` | 專注計時 |
+| `RECEIVE_BOOT_COMPLETED` | 開機後恢復排程 |
 
-無 `INTERNET` 權限，無雲端同步。
+未連結 Drive 時，金流與任務資料仍只存在本機。
 
 ## 授權
 
