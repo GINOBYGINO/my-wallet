@@ -29,5 +29,10 @@ keystore.properties
 # Kotlin
 .kotlin/
 
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
 # 內部規劃文件（不開源）
 V1.*_PLAN.md
